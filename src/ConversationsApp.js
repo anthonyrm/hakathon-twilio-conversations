@@ -10,6 +10,7 @@ import Conversation from "./Conversation";
 import LoginPage from "./LoginPage";
 import { ConversationsList } from "./ConversationsList";
 import { HeaderItem } from "./HeaderItem";
+import { postService } from "./utils/axios";
 
 const { Content, Sider, Header } = Layout;
 const { Text } = Typography;
@@ -33,9 +34,9 @@ class ConversationsApp extends React.Component {
     };
   }
 
-  componentDidMount = () => {
+  componentDidMount = async () => {
     if (this.state.loggedIn) {
-      this.getToken();
+      await this.getToken();
       this.setState({ statusString: "Fetching credentials…" });
     }
   };
@@ -66,9 +67,12 @@ class ConversationsApp extends React.Component {
     this.conversationsClient.shutdown();
   };
 
-  getToken = () => {
+   getToken = async () => {
     // Paste your unique Chat token function
-    const myToken = "<Your token here>";
+    const response = await postService('generate-token', {
+      identity: 'poplin'
+    });
+    const myToken = response.token;//"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCIsImN0eSI6InR3aWxpby1mcGE7dj0xIn0.eyJqdGkiOiJTSzI1OGVmMjdhOTA1NmQ2OGFlM2U2Mjg5MWU1NjQ2MjdmLTE2MjIyMTgxOTQiLCJncmFudHMiOnsiaWRlbnRpdHkiOiJwb3BsaW4iLCJjaGF0Ijp7InNlcnZpY2Vfc2lkIjoiSVNhYzVmNzEwMzk0MTg0ZjAxOTQyN2JhYjM3MTQxNjJmOCJ9fSwiaWF0IjoxNjIyMjE4MTk0LCJleHAiOjE2MjIyMjE3OTQsImlzcyI6IlNLMjU4ZWYyN2E5MDU2ZDY4YWUzZTYyODkxZTU2NDYyN2YiLCJzdWIiOiJBQzE0YjczZGJkYTIyM2Q5YjhjYzNkOWYyZmFiMDJkOTczIn0.A3NybmKmsvtnRkVwGk6q8JefNaym-ABaY0VNpF3eZh0";
     this.setState({ token: myToken }, this.initConversations);
   };
 
@@ -85,7 +89,7 @@ class ConversationsApp extends React.Component {
         });
       if (state === "connected") {
         this.setState({
-          statusString: "You are connected.",
+          statusString: "Estás conectado.",
           status: "success"
         });
       }
@@ -97,13 +101,13 @@ class ConversationsApp extends React.Component {
         });
       if (state === "disconnected")
         this.setState({
-          statusString: "Disconnected.",
+          statusString: "Desconectado.",
           conversationsReady: false,
           status: "warning"
         });
       if (state === "denied")
         this.setState({
-          statusString: "Failed to connect.",
+          statusString: "Error al conectar.",
           conversationsReady: false,
           status: "error"
         });
@@ -133,7 +137,7 @@ class ConversationsApp extends React.Component {
         />
       );
     } else if (status !== "success") {
-      conversationContent = "Loading your conversation!";
+      conversationContent = "Cargando chat!";
     } else {
       conversationContent = "";
     }
@@ -154,11 +158,12 @@ class ConversationsApp extends React.Component {
                 }}
               >
                 <HeaderItem style={{ paddingRight: "0", display: "flex" }}>
-                  <Logo />
+                  {/* <Logo /> */}
+                  <img width="90px" src="https://www.quantum-talent.com/hubfs/img/logo-quantum-w.png"/>
                 </HeaderItem>
                 <HeaderItem>
                   <Text strong style={{ color: "white" }}>
-                    Conversations
+                    Conversaciones
                   </Text>
                 </HeaderItem>
               </div>

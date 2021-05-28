@@ -14,7 +14,7 @@ export class ConversationsList extends React.Component {
 
         return (
             <List
-                header={"Open Conversations"}
+                header={"Hub de Chats"}
                 className={conversationsListStyles['conversations-list']}
                 bordered={true}
                 loading={conversations.length === 0}
